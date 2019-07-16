@@ -13,6 +13,7 @@ import argparse
 from api import PRN
 from utils.render import render_texture
 import cv2
+from PIL import Image
 
 
 def texture_editing(prn, args):
