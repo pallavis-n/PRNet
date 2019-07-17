@@ -9,6 +9,7 @@ from PIL import Image
 from api import PRN
 from utils.write import write_obj_with_colors
 from utils.cv_plot import plot_kpt
+from utils.cv_plot import plot_vertices
 
 # ---- init PRN
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' # GPU number, -1 for CPU
@@ -37,13 +38,10 @@ for i, image_path in enumerate(image_path_list):
         info = sio.loadmat(mat_path)
         kpt = info['pt3d_68'] # (3, 68))
         
+        # get the keypoints and place them on the original 2D picture
         kpt_T = (np.transpose(kpt)) # transpose matrix to get points in (68, 3)
-        kpt_img = plot_kpt(image, kpt_T) # get the kpt information to show on the original image
-
+        kpt_img = plot_kpt(image, kpt_T)
         newImg = Image.fromarray(kpt_img)
-        newImg.save("keypoint_output.png")
-        
-        #kpt_img.save(save_folder, ',png') # save the image in the same location as the others
         
         pos = prn.process(image, kpt) # kpt information is only used for detecting face and cropping image
     else:
@@ -57,9 +55,16 @@ for i, image_path in enumerate(image_path_list):
     # corresponding colors
     colors = prn.get_colors(image, vertices)
 
+    # find the mesh of 3D vertices and put it on the original 2D picture
+    mesh = plot_vertices(image, vertices)
+    mesh_plot = Image.fromarray(mesh)
+
+
     # -- save
     name = image_path.strip().split('/')[-1][:-4]
     np.savetxt(os.path.join(save_folder, name + '.txt'), kpt)
+    newImg.save(os.path.join(save_folder, name + '.png')) # save the image in the same location as the others
+    mesh_plot.save(os.path.join(save_folder, name + '_2.png')) # save the mesh image in same location
     write_obj_with_colors(os.path.join(save_folder, name + '.obj'), vertices, prn.triangles, colors) #save 3d face(can open with meshlab)
 
     sio.savemat(os.path.join(save_folder, name + '_mesh.mat'), {'vertices': vertices, 'colors': colors, 'triangles': prn.triangles})
