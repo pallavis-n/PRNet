@@ -10,6 +10,7 @@ from api import PRN
 from utils.write import write_obj_with_colors
 from utils.cv_plot import plot_kpt
 from utils.cv_plot import plot_vertices
+from utils.cv_plot import plot_pose_box
 
 # ---- init PRN
 os.environ['CUDA_VISIBLE_DEVICES'] = '0' # GPU number, -1 for CPU
@@ -59,12 +60,19 @@ for i, image_path in enumerate(image_path_list):
     mesh = plot_vertices(image, vertices)
     mesh_plot = Image.fromarray(mesh)
 
+    # find the 3D plot box and put it on the original 2D picture
+    vert_can = np.load('Data/uv-data/canonical_vertices.npy')
+    vert_h = np.hstack((vertices, np.ones([vertices.shape[0],1])))
+    P = np.linalg.lstsq(vert_h, vert_can)[0].T
+    box = plot_pose_box(image, P, kpt_T)
+    box_plot = Image.fromarray(box)
 
     # -- save
     name = image_path.strip().split('/')[-1][:-4]
     np.savetxt(os.path.join(save_folder, name + '.txt'), kpt)
     newImg.save(os.path.join(save_folder, name + '.png')) # save the image in the same location as the others
     mesh_plot.save(os.path.join(save_folder, name + '_2.png')) # save the mesh image in same location
+    box_plot.save(os.path.join(save_folder, name + '_3.png')) # save teh box plot in same location
     write_obj_with_colors(os.path.join(save_folder, name + '.obj'), vertices, prn.triangles, colors) #save 3d face(can open with meshlab)
 
     sio.savemat(os.path.join(save_folder, name + '_mesh.mat'), {'vertices': vertices, 'colors': colors, 'triangles': prn.triangles})
