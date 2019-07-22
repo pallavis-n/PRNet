@@ -86,6 +86,10 @@ def main(args):
         # corresponding colors
         colors = prn.get_colors(image, vertices)
 
+        # get the keypoints and place them on the original 2D picture
+        kpt_pts = plot_kpt(image, kpt)
+        kpt_img = Image.fromarray(kpt_pts)
+
         # find the mesh of 3D vertices and put it on the original 2D picture
         mesh = plot_vertices(image, vertices)
         mesh_plot = Image.fromarray(mesh)
@@ -101,6 +105,7 @@ def main(args):
 
         # -- save
         np.savetxt(os.path.join(save_folder, name + '.txt'), kpt)
+        kpt_img.save(os.path.join(save_folder, name + '_kpt.png')) # save the image in the same location as the others
         mesh_plot.save(os.path.join(save_folder, name + '_vertices_mesh.png')) # save the mesh image in same location
         box_plot.save(os.path.join(save_folder, name + '_pose_box.png')) # save the  box plot in same location
         depth_plot.save(os.path.join(save_folder, name + '_depth_image.gif')) # save the depth image in same location
