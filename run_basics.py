@@ -1,3 +1,19 @@
+###################################################################################################
+#
+#     This file generates the following given an input folder with images :
+#
+#     1) vertices_mesh
+#     2) pose_box
+#     3) depth_image
+#     4) 3D face (.obj)
+#     5) landmarks (.txt)
+#     6) mat file (.mat) - for further matlab operations
+#
+#
+#     USAGE : python run_basics.py -i <directory> -o <directory> --isDlib=True
+#
+####################################################################################################
+
 import numpy as np
 import os
 from glob import glob
