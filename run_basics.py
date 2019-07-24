@@ -64,12 +64,6 @@ def main(args):
             info = sio.loadmat(mat_path)
             kpt = info['pt3d_68'] # (3, 68))
 
-            # get the keypoints and place them on the original 2D picture
-            kpt_T = (np.transpose(kpt)) # transpose matrix to get points in (68, 3)
-            kpt_pts = plot_kpt(image, kpt_T)
-            kpt_img = Image.fromarray(kpt_pts)
-            kpt_img.save(os.path.join(save_folder, name + '_kpt.png')) # save the image in the same location as the others
-
             pos = prn.process(image, kpt) # kpt information is only used for detecting face and cropping image
         else:
             max_size = max(image.shape[0], image.shape[1])
