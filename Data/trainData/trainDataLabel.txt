@@ -1,0 +1,2 @@
+/home/mcw/face3d/examples/results/posmap_300WLP/IBUG_image_008_1_0_posmap.jpg /home/mcw/face3d/examples/results/posmap_300WLP/IBUG_image_008_1_0.npy
+
