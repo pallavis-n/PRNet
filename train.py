@@ -29,8 +29,17 @@ class TrainData(object):
 		batch = []
 		imgs = []
 		labels = []
+                print(batch_list)
+                batch_list = batch_list[2:]
+                print(batch_list)
+
 		for item in batch_list:
-			img = cv2.imread(item[0])
+
+                       # if (item[0] == None or item[1] == None):
+                       #     continue
+
+                        print(item[0])
+		        img = cv2.imread(item[0])
 			label = np.load(item[1])
 			
 			im_array = np.array(img,dtype=np.float32)
