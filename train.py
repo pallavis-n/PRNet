@@ -23,6 +23,8 @@ class TrainData(object):
 			for item in temp:
 				item = item.strip().split()
 				self.train_data_list.append(item)
+
+                        print(self.train_data_list)
 			random.shuffle(self.train_data_list)
 
 	def getBatch(self,batch_list):
@@ -30,15 +32,15 @@ class TrainData(object):
 		imgs = []
 		labels = []
                 print(batch_list)
-                batch_list = batch_list[2:]
-                print(batch_list)
+                #batch_list = batch_list[2:]
+                #print(batch_list)
 
 		for item in batch_list:
 
                        # if (item[0] == None or item[1] == None):
                        #     continue
 
-                        print(item[0])
+                        #print(item[0])
 		        img = cv2.imread(item[0])
 			label = np.load(item[1])
 			
@@ -117,6 +119,10 @@ def main(args):
 	
 	# Begining train
 	for epoch in xrange(epochs):
+        
+                if (epoch % 100 == 0):
+                    learning_rate = learning_rate/2
+
 		for _ in xrange(int(math.ceil(1.0*data.num_data/batch_size))):
 			batch = data(batch_size)			
 			loss_res = sess.run(loss,feed_dict={x:batch[0],label:batch[1]})
