@@ -7,6 +7,7 @@ from skimage.transform import rescale, resize
 from time import time
 import argparse
 import ast
+from PIL import Image
 
 from api import PRN
 
@@ -124,7 +125,8 @@ def main(args):
             cv2.imshow('sparse alignment', plot_kpt(image, kpt))
             cv2.imshow('dense alignment', plot_vertices(image, vertices))
             cv2.imshow('pose', plot_pose_box(image, camera_matrix, kpt))
-            cv2.waitKey(0)
+            cv2.waitKey(0) #original
+            #cv2.waitKey(1) # for many pictures
 
 
 if __name__ == '__main__':

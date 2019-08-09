@@ -44,7 +44,7 @@ def main(args):
     if not os.path.exists(save_folder):
         os.mkdir(save_folder)
 
-    types = ('*.jpg', '*.png')
+    types = ('*.jpg', '*.png', '*.JPG')
     image_path_list= []
     for files in types:
         image_path_list.extend(glob(os.path.join(image_folder, files)))
@@ -63,9 +63,11 @@ def main(args):
             mat_path = image_path.replace('jpg', 'mat')
             info = sio.loadmat(mat_path)
             kpt = info['pt3d_68'] # (3, 68))
+            sio.savemat(os.path.join(save_folder, name + '_pt3d_68.mat'), {'pt3d_68': kpt})
 
             pos = prn.process(image, kpt) # kpt information is only used for detecting face and cropping image
         else:
+
             max_size = max(image.shape[0], image.shape[1])
             if max_size> 1000:
                 image = rescale(image, 1000./max_size)
@@ -99,6 +101,7 @@ def main(args):
 
         # -- save
         np.savetxt(os.path.join(save_folder, name + '.txt'), kpt)
+        np.savetxt(os.path.join(save_folder, name + '.txt'), kpt)
         kpt_img.save(os.path.join(save_folder, name + '_kpt.png')) # save the image in the same location as the others
         mesh_plot.save(os.path.join(save_folder, name + '_vertices_mesh.png')) # save the mesh image in same location
         box_plot.save(os.path.join(save_folder, name + '_pose_box.png')) # save the  box plot in same location
@@ -116,4 +119,3 @@ if __name__ == '__main__':
                         help='path to the output directory, where results(obj,txt files) will be stored.')
     parser.add_argument('--isDlib', default=True, type=ast.literal_eval,
                         help='whether to use dlib for detecting face, default is True, if False, the input image should be cropped in advance')
-    main(parser.parse_args())
